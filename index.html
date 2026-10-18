@@ -344,7 +344,19 @@ async function openViewer(url,name,roomId){
       viewerHls.on(Hls.Events.ERROR,(event,data)=>{
         if(myToken!==viewerToken)return;
         if(data && data.fatal){
-          showViewerError("配信を再生できませんでした","m3u8の取得または再生に失敗しました。SHOWROOMで直接視聴できます。");
+          const detail = [
+            data.type ? "種類: "+data.type : "",
+            data.details ? "詳細: "+data.details : "",
+            data.response && data.response.code ? "HTTP: "+data.response.code : "",
+            data.response && data.response.url ? "URL: "+data.response.url : ""
+          ].filter(Boolean).join("\\n");
+          console.error("SHOWROOM HLS fatal error", {
+            type:data.type, details:data.details, response:data.response,
+            reason:data.reason, networkDetails:data.networkDetails
+          });
+          showViewerError("配信を再生できませんでした",
+            (detail || "m3u8の取得または再生に失敗しました")+
+            "\\nVercelの関数ログも確認してください。SHOWROOMで直接視聴できます。");
         }
       });
       return;
