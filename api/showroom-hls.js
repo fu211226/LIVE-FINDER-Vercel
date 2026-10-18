@@ -11,7 +11,7 @@ export default async function handler(req, res) {
   const target = typeof req.query.url === 'string' ? req.query.url : '';
   if (!target) return res.status(400).send('url is required');
   let parsed; try { parsed = new URL(target); } catch { return res.status(400).send('invalid url'); }
-  if (!['https:'].includes(parsed.protocol) || !/(^|\.)showroom-live\.com$|(^|\.)showroom-cdn\.com$|(^|\.)showroom-live\.com$|(^|\.)akamaized\.net$|(^|\.)akamaized\.com$/.test(parsed.hostname)) return res.status(403).send('host not allowed');
+  if (!['https:'].includes(parsed.protocol) || !/(^|\.)showroom-live\.com$|(^|\.)showroom-cdn\.com$|(^|\.)showroom-txlive\.com$|(^|\.)akamaized\.net$|(^|\.)akamaized\.com$/.test(parsed.hostname)) return res.status(403).send('host not allowed');
   try {
     const headers = { 'User-Agent': 'Mozilla/5.0', 'Accept': '*/*', 'Referer': 'https://www.showroom-live.com/', 'Origin': 'https://www.showroom-live.com' };
     if (req.headers.range) headers.Range = req.headers.range;
