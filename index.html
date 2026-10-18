@@ -324,15 +324,9 @@ async function openViewer(url,name,roomId){
 
     const proxied="/api/showroom-hls?url="+encodeURIComponent(data.url);
 
-    // Safari / iPhoneなどのネイティブHLS
-    if(video.canPlayType("application/vnd.apple.mpegurl") || video.canPlayType("application/x-mpegURL")){
-      video.src=proxied;
-      await video.play();
-      loading.classList.add("hide");
-      return;
-    }
-
-    // Chrome / Androidなど
+    // Chrome / Edge / Firefoxでは、ネイティブHLS判定が不正確な場合があるため
+    // hls.jsを優先する。canPlayType()が空でなくても、実際にはHLSを再生できず
+    // "Failed to load because no supported source was found" になる環境がある。
     if(window.Hls && Hls.isSupported()){
       viewerHls=new Hls({
         enableWorker:true,
@@ -353,6 +347,21 @@ async function openViewer(url,name,roomId){
           showViewerError("配信を再生できませんでした","m3u8の取得または再生に失敗しました。SHOWROOMで直接視聴できます。");
         }
       });
+      return;
+    }
+
+    // hls.js非対応のSafari等に限りネイティブHLSを試す
+    if(video.canPlayType("application/vnd.apple.mpegurl") === "probably" ||
+       video.canPlayType("application/vnd.apple.mpegurl") === "maybe"){
+      video.src=proxied;
+      video.addEventListener("error",()=>{
+        if(myToken!==viewerToken)return;
+        const mediaError=video.error;
+        showViewerError("配信を再生できませんでした",
+          "動画ソースを再生できませんでした"+(mediaError ? " (MediaError "+mediaError.code+")" : "")+"。SHOWROOMで直接視聴できます。");
+      },{once:true});
+      await video.play();
+      loading.classList.add("hide");
       return;
     }
 
