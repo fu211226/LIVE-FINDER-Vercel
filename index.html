@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SHOWROOM 配信確認</title>
+<style>
+:root{--bg:#0d0d15;--panel:#171720;--panel2:#1b1b26;--line:#29293a;--text:#f7f7fb;--muted:#a5a5b5;--purple:#8b3dff;--purple2:#a84cff;--pink:#ff2d8d;--red:#ff4050;--yellow:#ffc400;--green:#18c77a}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -10%,#221343 0,#0d0d15 38%);color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif}
+header{height:72px;border-bottom:1px solid #242432;background:#15151d;display:flex;align-items:center;padding:0 5.5%;gap:14px}
+.logo{display:flex;align-items:center;gap:12px;font-weight:800;font-size:16px}.logoIcon{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#8c40ff,#7134e8);display:grid;place-items:center;font-weight:900}
+.logo small{display:block;color:#8f8fa1;font-size:10px;font-weight:500;margin-top:3px}
+.headBtns{margin-left:auto;display:flex;gap:10px}.headBtn{height:40px;min-width:40px;border:1px solid var(--line);border-radius:11px;background:#171722;color:#fff;cursor:pointer}.headBtn.notify{background:#8a3cf0;border-color:#8a3cf0;padding:0 15px;font-weight:700}
+main{max-width:1085px;margin:28px auto 50px;padding:0 22px}
+.hero{border-radius:25px;padding:32px 31px;background:linear-gradient(110deg,#32136e,#8d38f0 68%,#a447f4);box-shadow:0 18px 50px #0005;display:flex;justify-content:space-between;align-items:center;gap:20px}
+.eyebrow{letter-spacing:2px;color:#d9c6f5;font-size:11px;font-weight:800}.hero h1{font-size:31px;line-height:1.15;margin:10px 0 8px}.hero p{margin:0;color:#dfcff5;font-size:13px}
+.update{background:#9a42ef;color:#fff;border:0;border-radius:12px;padding:12px 18px;font-weight:800;cursor:pointer;box-shadow:inset 0 1px #ffffff22}.updated{font-size:11px;color:#d9bff5;text-align:right;margin-top:9px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0}.stat{background:var(--panel);border:1px solid var(--line);border-top:2px solid var(--purple);border-radius:15px;padding:14px 18px}.stat.live{border-top-color:var(--red)}.stat.next{border-top-color:var(--yellow)}.stat.fav{border-top-color:var(--yellow)}.stat.ok{border-top-color:var(--green)}
+.stat .label{color:#aaaabd;font-size:12px}.stat .num{font-size:23px;font-weight:850;margin-top:4px}.stat .num small{font-size:11px;font-weight:500;color:#aaaabd}
+.toolbar{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:12px 14px;margin-bottom:23px}
+.searchRow{display:flex;gap:9px;align-items:center}.addFavBtn{height:40px;white-space:nowrap;border:1px solid #6f36c8;background:#24133b;color:#fff;border-radius:11px;padding:0 13px;font-size:12px;font-weight:700;cursor:pointer}.addFavBtn:hover{background:#32194f}.search{height:40px;border:1px solid var(--line);background:#15151f;color:#fff;border-radius:11px;padding:0 14px;width:100%;font-size:14px;outline:none}.search:focus{border-color:#7840d6}
+.tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.tag{border:1px solid var(--line);background:#15151f;color:#aaaabd;border-radius:999px;padding:6px 12px;font-size:11px;cursor:pointer}.tag.active{border-color:#8842ee;color:#fff;background:#24133b}
+.offlineBadge{display:inline-block;font-size:10px;color:#c9b5e8;background:#241a35;border:1px solid #3b2a55;border-radius:999px;padding:3px 7px;margin-top:6px}.removeFav{margin-top:7px;width:100%;border:1px solid #3a3048;background:#17131f;color:#aaa1b5;border-radius:8px;padding:6px;font-size:10px;cursor:pointer}.removeFav:hover{color:#fff;border-color:#6e4b91}.searchHint{font-size:11px;color:#aaaabd;margin-top:8px}.error{border:1px solid #a56a72;background:#2a171b;color:#ff586b;padding:11px 14px;border-radius:12px;font-size:12px;margin-bottom:20px}
+.section{margin-top:22px}.sectionTitle{display:flex;justify-content:space-between;align-items:center;margin:0 0 11px}.sectionTitle h2{font-size:19px;margin:0}.sectionTools{display:flex;align-items:center;gap:9px}.sectionTools span{font-size:11px;color:#9999aa}.sectionTools select{appearance:none;background:#171720;color:#c9c9d7;border:1px solid var(--line);border-radius:9px;padding:6px 28px 6px 9px;font-size:11px;outline:none}.sectionTools select:focus{border-color:#8842ee}.timeBox{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:7px}.nextDate{font-size:12px;color:#fff;font-weight:800}.countdown{font-size:10px;color:#b58aff;background:#26163d;border:1px solid #3a2357;border-radius:999px;padding:3px 7px;white-space:nowrap}.card.nextCard .thumb{height:135px}.card.nextCard .body{padding-top:10px}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;min-width:0}.thumb{height:145px;background:#11111a;position:relative}.thumb img{width:100%;height:100%;object-fit:cover}.badge{position:absolute;left:10px;top:10px;background:#ef3340;color:#fff;border-radius:7px;padding:4px 7px;font-size:10px;font-weight:800}.star{position:absolute;right:10px;top:8px;border:0;background:#0009;color:#fff;border-radius:50%;width:30px;height:30px;cursor:pointer}.body{padding:12px}.name{font-weight:800;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sub{color:#9e9eae;font-size:11px;margin-top:5px}.liveTiming{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}.liveTiming span{font-size:10px;border-radius:7px;padding:4px 6px;background:#211a31;border:1px solid #3a2a50;color:#d9c8ff}.liveTiming .elapsed{background:#193126;border-color:#28553d;color:#9ef0bb}body.light .liveTiming span{background:#f0e9ff;border-color:#d8c6fa;color:#58348a}body.light .liveTiming .elapsed{background:#e6f8ec;border-color:#b7e6c5;color:#176a37}.open{display:block;text-align:center;text-decoration:none;color:#fff;background:#7434dd;border-radius:9px;padding:8px;margin-top:10px;font-size:11px;font-weight:700}.empty{background:var(--panel);border:1px dashed var(--line);border-radius:15px;min-height:120px;display:grid;place-items:center;text-align:center;color:#a5a5b5;font-size:13px;padding:20px}.empty strong{display:block;color:#fff;margin-bottom:5px}
+footer{text-align:center;color:#77778a;border-top:1px solid #23232e;padding:28px 15px;font-size:10px}
+@media(max-width:950px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:700px){.searchRow{display:block}.addFavBtn{width:100%;margin-top:7px}header{padding:0 12px;height:64px}.logo{font-size:14px;gap:9px}.logoIcon{width:34px;height:34px}.headBtns{gap:6px}.headBtn{height:36px;min-width:36px}.headBtn.notify{padding:0 9px}.logo small{display:none}main{margin-top:15px;padding:0 13px}.hero{padding:24px;display:block}.hero h1{font-size:27px}.update{margin-top:16px}.updated{text-align:left}.stats{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.thumb{height:110px}.body{padding:9px}.name{font-size:12px}.sub{font-size:10px}.open{font-size:10px;padding:7px 4px}.headBtn.notify{padding:0 10px}.headBtn.notify span{display:none}}
+@media(max-width:430px){main{padding:0 9px}.hero{padding:20px 18px;border-radius:20px}.hero h1{font-size:24px}.hero p{font-size:12px}.stats{gap:8px}.stat{padding:11px 12px}.stat .num{font-size:20px}.toolbar{padding:10px;margin-bottom:18px}.tags{gap:5px}.tag{padding:5px 9px}.sectionTools{gap:5px}.sectionTools select{padding:5px 22px 5px 7px}.sectionTitle h2{font-size:16px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.thumb{height:100px}.star{width:26px;height:26px;right:7px;top:7px}.badge{left:7px;top:7px;padding:3px 5px;font-size:9px}}
+
+.viewerModal{position:fixed;inset:0;z-index:9999;background:rgba(5,3,12,.88);display:none;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(8px)}
+.viewerModal.show{display:flex}
+.viewerBox{width:min(960px,100%);height:min(760px,92vh);background:#11111a;border:1px solid #4a2b70;border-radius:18px;overflow:hidden;box-shadow:0 24px 80px #000b;display:flex;flex-direction:column}
+.viewerHead{height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 12px 0 16px;background:linear-gradient(135deg,#24113d,#4b1f73);color:#fff;flex:none}
+.viewerTitle{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:10px}
+.viewerClose{border:0;background:#ffffff22;color:#fff;border-radius:10px;width:38px;height:38px;font-size:22px;cursor:pointer}
+.viewerFrameWrap{position:relative;flex:1;background:#000;min-height:0}
+.viewerFrame{width:100%;height:100%;border:0;background:#000}
+.viewerVideo{width:100%;height:100%;display:block;background:#000;object-fit:contain}
+.viewerLoading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;background:#09090e;color:#fff;text-align:center}
+.viewerLoading.hide{display:none}
+.viewerSpinner{font-size:26px;animation:viewerPulse 1s infinite}
+@keyframes viewerPulse{50%{opacity:.25}}
+
+.viewerFallback{display:none;position:absolute;inset:0;align-items:center;justify-content:center;flex-direction:column;gap:12px;background:#0b0b10;color:#fff;text-align:center;padding:24px}
+.viewerFallback.show{display:flex}
+.viewerFallback a{display:inline-flex;align-items:center;justify-content:center;padding:11px 18px;border-radius:10px;background:#8b4de8;color:#fff;text-decoration:none;font-weight:800}
+.viewerOpen{display:inline-flex;align-items:center;justify-content:center;margin-top:9px;padding:8px 12px;border-radius:9px;border:1px solid #6b3ca3;background:#2b1744;color:#fff;text-decoration:none;font-size:12px;font-weight:800}
+@media (max-width:700px){
+  .viewerModal{padding:0;align-items:flex-start}
+  .viewerBox{width:100%;height:100dvh;max-height:none;border:0;border-radius:0}
+  .viewerHead{height:56px;padding-left:14px}
+  .viewerFrameWrap{height:calc(100dvh - 56px)}
+  .viewerClose{width:40px;height:40px}
+}
+
+
+/* Light theme overrides: the previous toggle only saved a class without defining light colors. */
+body.light{--bg:#f4f3fa;--panel:#ffffff;--panel2:#f7f5fc;--line:#ded9e9;--text:#242033;--muted:#686477;background:radial-gradient(circle at 50% -10%,#eee2ff 0,#f6f5fb 42%);color:var(--text)}
+body.light header{background:#fff;border-bottom-color:#e5e0ed}
+body.light .headBtn{background:#fff;color:#29243a;border-color:#ded9e9}
+body.light .headBtn.notify{background:#8a3cf0;color:#fff;border-color:#8a3cf0}
+body.light .card,body.light .stat,body.light .panel,body.light .empty,body.light .modal-card,body.light .sortbox,body.light input,body.light select{background:#fff;color:var(--text);border-color:var(--line)}
+body.light .tag{background:#fff;color:#373148;border-color:#ded9e9}
+body.light .tag.active{background:#eee2ff;color:#6224c8;border-color:#b993f5}
+body.light .name,body.light .body,body.light .section,body.light .label{color:var(--text)}
+body.light .sub,body.light .muted,body.light .updated,body.light .logo small{color:var(--muted)}
+body.light .error{background:#fff0f0;color:#9f2020}
+
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><div class="logoIcon">SR</div><div>SHOWROOM 配信確認<small>AKB48 × SHOWROOM Live Dashboard</small></div></div>
+  <div class="headBtns"><button class="headBtn" id="theme">🌙</button><button class="headBtn" id="thumb">🖼️</button><button class="headBtn notify" id="notify">🔔 通知</button></div>
+</header>
+<main>
+  <section class="hero">
+    <div><div class="eyebrow">LIVE MONITOR</div><h1>配信中・次回配信を<br>ひと目でチェック</h1><p>SHOWROOMの公開情報を自動取得、検索・お気に入り・通知にも対応。</p></div>
+    <div><button class="update" id="refresh">↻ 今すぐ更新</button><div class="updated" id="updated">最終更新 ---</div></div>
+  </section>
+  <div class="stats">
+    <div class="stat live"><div class="label">🔴 配信中</div><div class="num" id="liveNum">0<small> 件</small></div></div>
+    <div class="stat next"><div class="label">⏰ 次回配信</div><div class="num" id="nextNum">0<small> 件</small></div></div>
+    <div class="stat fav"><div class="label">⭐ お気に入り</div><div class="num" id="favNum">0<small> 件</small></div></div>
+    <div class="stat" id="connection"><div class="label">● 接続</div><div class="num" id="connText">確認中</div></div>
+  </div>
+  <div class="toolbar">
+    <div class="searchRow"><input class="search" id="search" placeholder="🔎 メンバー名・ルーム名で検索"><button class="addFavBtn" id="addFavBtn">⭐ ルームを追加</button></div>
+    <div class="tags"><button class="tag active" data-cat="all">すべて</button><button class="tag" data-cat="48group">48グループ</button><button class="tag" data-cat="46group">46グループ</button><button class="tag" data-cat="honeyworks">HoneyWorks アイドルグループ</button><button class="tag" data-cat="idol">その他アイドル</button><button class="tag" data-cat="オーディション">オーディション</button><button class="tag" data-cat="fav">⭐ お気に入り</button></div>
+  </div>
+  <div id="error" class="error" hidden></div>
+  <section class="section"><div class="sectionTitle"><h2>🔴 配信中</h2><div class="sectionTools"><select id="liveSort" aria-label="配信中の並び順"><option value="view">人気順</option><option value="started">開始が新しい順</option><option value="name">名前順</option></select><span id="liveCount">0件</span></div></div><div id="liveGrid" class="grid"></div></section>
+  <section class="section"><div class="sectionTitle"><h2>⏰ 次回配信</h2><div class="sectionTools"><select id="nextSort" aria-label="次回配信の並び順"><option value="time">日時が近い順</option><option value="name">名前順</option></select><span id="nextCount">0件</span></div></div><div id="nextGrid" class="grid"></div></section>
+  <section class="section" id="favSection"><div class="sectionTitle"><h2>⭐ お気に入り</h2><div class="sectionTools"><span id="favStatus">配信状況を表示</span></div></div><div id="favGrid" class="grid"></div></section>
+  <section class="section"><div class="sectionTitle"><h2>✈️ フリート</h2><span>お知らせ</span></div><div class="empty" style="min-height:74px;text-align:left"><div><strong>✈️ フリート・告知エリア</strong>SHOWROOMの告知や特別配信などをまとめて表示できる拡張エリアです。</div></div></section>
+</main>
+<footer>SHOWROOM 配信確認 改良版　・　公開情報を利用しています。配信の詳細はSHOWROOM公式ページをご確認ください。</footer>
+
+<div id="viewerModal" class="viewerModal" role="dialog" aria-modal="true" aria-label="配信視聴">
+  <div class="viewerBox">
+    <div class="viewerHead">
+      <div id="viewerTitle" class="viewerTitle">配信を読み込み中…</div>
+      <button class="viewerClose" onclick="closeViewer()" aria-label="閉じる">×</button>
+    </div>
+    <div class="viewerFrameWrap">
+      <video id="viewerVideo" class="viewerVideo" controls playsinline webkit-playsinline preload="none"></video>
+      <div id="viewerLoading" class="viewerLoading">
+        <div class="viewerSpinner">●</div>
+        <strong>配信を読み込んでいます…</strong>
+        <span>m3u8（HLS）を取得中</span>
+      </div>
+      <div id="viewerFallback" class="viewerFallback">
+        <div style="font-size:34px">📺</div>
+        <strong id="viewerErrorTitle">配信を再生できませんでした</strong>
+        <span id="viewerErrorText">SHOWROOMで直接視聴できます。</span>
+        <a id="viewerFallbackLink" href="#" target="_blank" rel="noopener">SHOWROOMで開く</a>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1.6.15/dist/hls.min.js"></script>
+<script>
+const LS="liveFinderFavV2";
+const META="liveFinderFavMetaV1";
+let favorites=new Set(JSON.parse(localStorage.getItem(LS)||"[]")), favMeta=JSON.parse(localStorage.getItem(META)||"{}"), lives=[], nexts=[], category="all", hideImages=false;
+const $=x=>document.getElementById(x);
+const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+function favSave(){localStorage.setItem(LS,JSON.stringify([...favorites]));localStorage.setItem(META,JSON.stringify(favMeta));$("favNum").textContent=favorites.size}
+function rememberMeta(x){const id=String(x.id||x.key||"");if(!id)return;favMeta[id]={id,name:x.name||"SHOWROOM",key:x.key||"",img:x.img||"",genre:x.genre||""};}
+window.toggleFav=id=>{id=String(id);const found=lives.find(x=>String(x.id)===id)||nexts.find(x=>String(x.id)===id);if(favorites.has(id)){favorites.delete(id)}else{favorites.add(id);if(found)rememberMeta(found)}favSave();render()};
+window.removeOfflineFav=id=>{id=String(id);favorites.delete(id);delete favMeta[id];favSave();render()};
+function parseJsonText(r){return r.text().then(t=>{if(!t.trim())throw new Error("空のレスポンス");try{return JSON.parse(t)}catch(e){throw new Error("JSONではないレスポンス")}})}
+function normalizeLive(j){
+ const map=new Map();
+ (j?.onlives||[]).forEach(g=>(g.lives||[]).forEach(x=>{
+   const id=String(x.room_id||"");
+   const key=String(x.room_url_key||"");
+   if(!id&&!key)return;
+   // SHOWROOM may return the same room in multiple genre buckets.
+   // Deduplicate primarily by room_url_key, then room_id.
+   const unique=key||id;
+   const item={id:id||key,name:x.main_name||x.room_name||"SHOWROOM",key,img:x.image_square||x.image||"",view:Number(x.view_num)||0,genre:g.genre_name||"",started:Number(x.started_at)||0,liveId:String(x.live_id||"")};
+   const prev=map.get(unique);
+   if(!prev || item.view>prev.view || (!prev.img&&item.img)) map.set(unique,item);
+ }));
+ return [...map.values()];
+}
+function collectObjects(v,out=[]){if(Array.isArray(v)){v.forEach(x=>collectObjects(x,out));return out}if(v&&typeof v==="object"){if((v.room_id||v.roomId)&& (v.room_url_key||v.roomUrlKey) && (v.start_time||v.start_at||v.started_at||v.epoch||v.start_timestamp))out.push(v);Object.values(v).forEach(x=>collectObjects(x,out))}return out}
+function normalizeNext(j){
+ const raw=collectObjects(j),out=[],seen=new Set();
+ raw.forEach(x=>{const id=String(x.room_id||x.roomId);let t=x.start_time||x.start_at||x.started_at||x.epoch||x.start_timestamp;if(typeof t==="string"&&/^\d+$/.test(t))t=Number(t);if(typeof t==="number"&&t<100000000000)t*=1000;const d=new Date(t);if(!seen.has(id)&&id&&d>new Date()){seen.add(id);out.push({id,name:x.room_name||x.roomName||x.main_name||"SHOWROOM",key:x.room_url_key||x.roomUrlKey||"",img:x.image||x.image_url||x.image_square||"",time:d,genre:x.genre_name||""})}});return out.sort((a,b)=>a.time-b.time)
+}
+function formatNextTime(d){
+ const now=new Date(), diff=d-now, days=Math.floor(diff/86400000), hrs=Math.floor((diff%86400000)/3600000), mins=Math.max(0,Math.floor((diff%3600000)/60000));
+ let rel=days>0?`あと${days}日${hrs}時間`:hrs>0?`あと${hrs}時間${mins}分`:`あと${mins}分`;
+ const date=d.toLocaleDateString("ja-JP",{month:"numeric",day:"numeric",weekday:"short"});
+ const time=d.toLocaleTimeString("ja-JP",{hour:"2-digit",minute:"2-digit"});
+ return {date,time,rel};
+}
+function formatLiveTiming(value){
+ let ms=Number(value)||0;
+ if(ms>0&&ms<100000000000)ms*=1000;
+ if(!ms||!Number.isFinite(ms))return '<div class="liveTiming"><span>🕒 開始時刻：取得できません</span></div>';
+ const start=new Date(ms);
+ if(Number.isNaN(start.getTime())||start.getTime()>Date.now()+60000)return '<div class="liveTiming"><span>🕒 開始時刻：取得できません</span></div>';
+ const startText=start.toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});
+ const mins=Math.max(0,Math.floor((Date.now()-start.getTime())/60000));
+ const days=Math.floor(mins/1440), hours=Math.floor((mins%1440)/60), rem=mins%60;
+ const elapsed=days>0?`${days}日${hours}時間${rem}分`:hours>0?`${hours}時間${rem}分`:`${rem}分`;
+ return '<div class="liveTiming"><span>🕒 開始 '+startText+'</span><span class="elapsed">⏱ 配信時間 '+elapsed+'</span></div>';
+}
+function card(x,live,offline=false){
+ const url=x.key?"https://www.showroom-live.com/r/"+encodeURIComponent(x.key):"https://www.showroom-live.com/";
+ const id=String(x.id||x.key||"");
+ const f=favorites.has(id), image=!hideImages&&x.img?'<img src="'+esc(x.img)+'" loading="lazy" alt="">':"";
+ let sub="", nextMarkup="";
+ if(live){sub=(x.view||0).toLocaleString()+" 人視聴"+(x.genre?" ・ "+esc(x.genre):"");nextMarkup=formatLiveTiming(x.started);}
+ else if(offline){sub=x.genre?esc(x.genre):"SHOWROOM";nextMarkup='<span class="offlineBadge">⚫ オフライン</span><button class="removeFav" onclick="removeOfflineFav(\''+esc(id)+'\')">お気に入りから削除</button>';}
+ else{const ft=formatNextTime(x.time);sub=(x.genre?esc(x.genre):"SHOWROOM");nextMarkup='<div class="timeBox"><span class="nextDate">'+ft.date+' '+ft.time+'</span><span class="countdown">'+ft.rel+'</span></div>';}
+ const remove=offline?'<a class="open" target="_blank" rel="noopener" href="'+esc(url)+'">SHOWROOMを開く</a>':(live?'<button class="viewerOpen" onclick="openViewer(\''+esc(url)+'\',\''+esc(x.name)+'\',\''+esc(x.id)+'\')">▶ 配信を見る</button><a class="open" target="_blank" rel="noopener" href="'+esc(url)+'">SHOWROOMを開く</a>':'<a class="open" target="_blank" rel="noopener" href="'+esc(url)+'">SHOWROOMを開く</a>');
+ return '<article class="card '+(live?'':'nextCard')+'"><div class="thumb">'+image+(live?'<span class="badge">LIVE</span>':"")+'<button class="star" aria-label="お気に入り" onclick="toggleFav(\''+esc(id)+'\')">'+(f?"★":"☆")+'</button></div><div class="body"><div class="name">'+esc(x.name)+'</div><div class="sub">'+sub+'</div>'+nextMarkup+remove+'</div></article>';
+}
+function empty(title,text){return '<div class="empty"><div>🛰️<strong>'+title+'</strong>'+text+'</div></div>'}
+function render(){
+ const q=$("search").value.trim().toLowerCase();
+ const matchCat=(x)=>{
+  if(category==="all") return true;
+  if(category==="fav") return favorites.has(String(x.id));
+  // The onlives API provides room keys, names and broad genres, but not a
+  // reliable artist/group affiliation field. Include the actual room key in
+  // matching (the old code accidentally checked x.urlKey, which is never set).
+  const text=[x.name,x.genre,x.key,x.urlKey].filter(Boolean).join(" ").toLowerCase();
+  if(category==="48group") return /akb48|ske48|nmb48|hkt48|ngt48|stu48|48グループ/.test(text) && !/オーディション|候補生|追加\s*ad|追加募集|12期生|12期候補生/.test(text);
+  if(category==="46group") return /乃木坂46|櫻坂46|欅坂46|日向坂46|46グループ/.test(text);
+  if(category==="honeyworks") return /honeyworks|ハニーワークス|ハニワ|高嶺のなでしこ|可憐なアイボリー|lip[×x＊*]lip|lipxlip|mona|成海聖奈|成海萌奈|告白実行委員会|ハコニワリリィ|chico with honeyworks/.test(text);
+  if(category==="idol") return /アイドル|idol|高嶺のなでしこ|可憐なアイボリー|乃木坂46|櫻坂46|日向坂46|akb48|ske48|nmb48|hkt48|ngt48|stu48|=love|≠me|≒joy|i\*ris|でんぱ組|私立恵比寿中学|ももいろクローバー|超ときめき宣伝部/.test(text);
+  if(category==="オーディション") return /オーディション|候補生|追加\s*ad|追加募集|12期生|12期候補生/.test(text);
+  return String(x.genre||"").includes(category);
+ };
+ let a=lives.filter(x=>(!q||x.name.toLowerCase().includes(q)||x.genre.toLowerCase().includes(q))&&matchCat(x));
+ let b=nexts.filter(x=>(!q||x.name.toLowerCase().includes(q)||x.genre.toLowerCase().includes(q))&&matchCat(x));
+ const ls=$("liveSort").value, ns=$("nextSort").value;
+ if(ls==="name") a.sort((x,y)=>x.name.localeCompare(y.name,"ja")); else if(ls==="started") a.sort((x,y)=>(y.started||0)-(x.started||0)); else a.sort((x,y)=>y.view-x.view);
+ if(ns==="name") b.sort((x,y)=>x.name.localeCompare(y.name,"ja")); else b.sort((x,y)=>x.time-b.time);
+ // Save metadata for anything that is currently visible, so it remains usable when offline.
+ lives.forEach(rememberMeta); nexts.forEach(rememberMeta);
+ const favOffline=Object.values(favMeta).filter(x=>favorites.has(String(x.id)) && !lives.some(y=>String(y.id)===String(x.id)) && !nexts.some(y=>String(y.id)===String(x.id)) && (!q||x.name.toLowerCase().includes(q)||String(x.genre||"").toLowerCase().includes(q)));
+ $("liveGrid").innerHTML=a.length?a.map(x=>card(x,true)).join(""):empty("現在、配信中の情報がありません","自動更新で再チェックします。");
+ $("nextGrid").innerHTML=b.length?b.slice(0,50).map(x=>card(x,false)).join(""):empty("次回配信の情報がありません","SHOWROOMの公開スケジュールを確認します。");
+ $("favGrid").innerHTML=favorites.size ? [...lives.filter(x=>favorites.has(String(x.id))).map(x=>({x,mode:"live"})),...nexts.filter(x=>favorites.has(String(x.id))).map(x=>({x,mode:"next"})),...favOffline.map(x=>({x,mode:"offline"}))].map(o=>card(o.x,o.mode==="live",o.mode==="offline")).join("") : empty("お気に入りはまだありません","配信中・次回配信の⭐から追加できます。配信していないルームは「⭐ ルームを追加」から登録できます。");
+ $("favStatus").textContent=favorites.size+"件";
+ $("liveNum").innerHTML=a.length+'<small> 件</small>'; $("nextNum").innerHTML=b.length+'<small> 件</small>';
+ $("liveCount").textContent=a.length+"件"; $("nextCount").textContent=b.length+"件";
+ favSave();
+}
+function addFavoriteRoom(){
+ const raw=prompt("お気に入りに追加するSHOWROOMのURLを入力してください。\n例: https://www.showroom-live.com/r/room_key");
+ if(!raw)return;
+ let u; try{u=new URL(raw)}catch(e){alert("SHOWROOMのURLを正しく入力してください。");return}
+ if(!/showroom-live\.com$/i.test(u.hostname) && !/\.showroom-live\.com$/i.test(u.hostname)){alert("SHOWROOMのURLを入力してください。");return}
+ let key=""; const parts=u.pathname.split("/").filter(Boolean); if(parts[0]==="r"&&parts[1])key=decodeURIComponent(parts[1]); else if(parts[0])key=decodeURIComponent(parts[0]);
+ if(!key){alert("ルームURLを認識できませんでした。/r/ルームキー のURLを入力してください。");return}
+ const id="room:"+key; const name=prompt("表示名を入力してください。\n空欄ならルームキーを使用します。",favMeta[id]?.name||key)||key;
+ favorites.add(id); favMeta[id]={id,name,key,img:favMeta[id]?.img||"",genre:favMeta[id]?.genre||""}; favSave(); render();
+}
+async function load(){
+ $("connText").textContent="取得中";$("error").hidden=true;
+ try{
+   const [lr,tr]=await Promise.all([fetch("/api/showroom-onlives?ts="+Date.now(),{cache:"no-store"}),fetch("/api/showroom-timetable?ts="+Date.now(),{cache:"no-store"})]);
+   if(!lr.ok)throw new Error("配信API HTTP "+lr.status);
+   const lj=await parseJsonText(lr); lives=normalizeLive(lj);
+   const currentLiveIds=new Set(lives.map(x=>String(x.liveId||x.id||x.key)));
+   if(previousLiveIds!==null && notificationsEnabled && "Notification" in window && Notification.permission==="granted"){
+     const started=lives.filter(x=>!previousLiveIds.has(String(x.liveId||x.id||x.key)));
+     started.slice(0,5).forEach(x=>{try{new Notification("🔴 SHOWROOM 配信開始",{body:x.name+" さんが配信を開始しました",tag:"live-"+String(x.liveId||x.id||x.key)});}catch(e){}});
+   }
+   previousLiveIds=currentLiveIds;
+   if(tr.ok){try{nexts=normalizeNext(await parseJsonText(tr))}catch(e){nexts=[]}} else nexts=[];
+   $("connText").textContent="接続OK";$("connection").className="stat ok";$("updated").textContent="最終更新 "+new Date().toLocaleTimeString("ja-JP");render()
+ }catch(e){
+   $("connText").textContent="取得失敗";$("connection").className="stat";
+   $("error").hidden=false;$("error").textContent="SHOWROOM情報を取得できませんでした。 "+e.message+"　自動更新で再試行します。";
+   render()
+ }
+}
+$("search").addEventListener("input",render);$("liveSort").addEventListener("change",render);$("nextSort").addEventListener("change",render);$("refresh").onclick=load;
+const savedTheme=localStorage.getItem("liveFinderTheme");if(savedTheme==="light")document.body.classList.add("light");
+function updateThemeButton(){const light=document.body.classList.contains("light");$("theme").textContent=light?"☀️":"🌙";$("theme").title=light?"ダークモードに切り替え":"ライトモードに切り替え";}
+updateThemeButton();$("theme").onclick=()=>{document.body.classList.toggle("light");localStorage.setItem("liveFinderTheme",document.body.classList.contains("light")?"light":"dark");updateThemeButton();};
+$("thumb").onclick=()=>{hideImages=!hideImages;localStorage.setItem("liveFinderHideImages",hideImages?"1":"0");render()};hideImages=localStorage.getItem("liveFinderHideImages")==="1";
+let notificationsEnabled=localStorage.getItem("liveFinderNotifications")==="1";
+let previousLiveIds=null;
+function updateNotifyButton(){const b=$("notify");if(!b)return;b.textContent=notificationsEnabled?"🔔 通知 ON":"🔔 通知 OFF";b.title=notificationsEnabled?"配信開始通知は有効です。クリックで停止":"クリックして配信開始通知を有効にします";b.setAttribute("aria-pressed",String(notificationsEnabled));}
+async function toggleNotifications(){
+ if(!window.isSecureContext){alert("通知を使うにはHTTPSで開く必要があります。Netlifyの https:// から開いてください。");return;}
+ if(!("Notification" in window)){alert("このブラウザは通知に対応していません。");return;}
+ if(notificationsEnabled){notificationsEnabled=false;localStorage.setItem("liveFinderNotifications","0");updateNotifyButton();return;}
+ let p=Notification.permission;
+ if(p==="denied"){
+   alert("Chrome側でこのサイトの通知がブロックされています。\n\n① アドレスバー左側のサイト設定アイコンをクリック\n②『サイトの設定』を開く\n③『通知』を『許可』に変更\n④ このページを再読み込みして、もう一度『🔔 通知 OFF』を押す\n\n通知の項目が見つからない場合は、Chromeの設定 → プライバシーとセキュリティ → サイトの設定 → 通知 から、このサイトを許可してください。");
+   return;
+ }
+ if(p==="default"){
+   try{p=await Notification.requestPermission();}catch(e){alert("通知の許可画面を開けませんでした。アドレスバー左側のサイト設定から通知を許可してください。");return;}
+ }
+ if(p!=="granted"){
+   alert("通知はまだ許可されていません。Chromeのサイト設定で、このサイトの通知を『許可』にしてください。");return;
+ }
+ notificationsEnabled=true;localStorage.setItem("liveFinderNotifications","1");updateNotifyButton();
+ try{new Notification("LIVE FINDER",{body:"配信開始通知を有効にしました。新しい配信を検知するとお知らせします。"});}
+ catch(e){alert("通知許可は有効ですが、ChromeまたはOSの通知設定で表示が制限されている可能性があります。");}
+}
+$("notify").onclick=toggleNotifications;updateNotifyButton();
+document.querySelectorAll(".tag").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tag").forEach(x=>x.classList.remove("active"));b.classList.add("active");category=b.dataset.cat;render()});
+$("addFavBtn").onclick=addFavoriteRoom;favSave();load();setInterval(load,30000);setInterval(()=>{if(lives.length)render()},60000);
+
+let viewerHls=null;
+let viewerToken=0;
+
+function showViewerError(title,text){
+  const loading=document.getElementById("viewerLoading");
+  const fallback=document.getElementById("viewerFallback");
+  document.getElementById("viewerErrorTitle").textContent=title||"配信を再生できませんでした";
+  document.getElementById("viewerErrorText").textContent=text||"SHOWROOMで直接視聴できます。";
+  loading.classList.add("hide");
+  fallback.classList.add("show");
+}
+
+async function openViewer(url,name,roomId){
+  const modal=document.getElementById("viewerModal");
+  const video=document.getElementById("viewerVideo");
+  const title=document.getElementById("viewerTitle");
+  const loading=document.getElementById("viewerLoading");
+  const fallback=document.getElementById("viewerFallback");
+  const fallbackLink=document.getElementById("viewerFallbackLink");
+  const myToken=++viewerToken;
+
+  if(viewerHls){try{viewerHls.destroy()}catch(e){}viewerHls=null}
+  video.pause();
+  video.removeAttribute("src");
+  video.load();
+  title.textContent="🔴 "+(name||"配信");
+  fallback.classList.remove("show");
+  loading.classList.remove("hide");
+  fallbackLink.href=url;
+  modal.classList.add("show");
+  document.body.style.overflow="hidden";
+
+  if(!roomId){
+    showViewerError("ルームIDを取得できませんでした","SHOWROOMで直接視聴してください。");
+    return;
+  }
+
+  try{
+    const r=await fetch("/api/showroom-stream?room_id="+encodeURIComponent(roomId)+"&ts="+Date.now(),{cache:"no-store"});
+    if(!r.ok) throw new Error("stream API HTTP "+r.status);
+    const data=await r.json();
+    if(myToken!==viewerToken) return;
+    if(!data.url) throw new Error(data.error||"m3u8 URLなし");
+
+    const proxied="/api/showroom-hls?url="+encodeURIComponent(data.url);
+
+    // Safari / iPhoneなどのネイティブHLS
+    if(video.canPlayType("application/vnd.apple.mpegurl") || video.canPlayType("application/x-mpegURL")){
+      video.src=proxied;
+      await video.play();
+      loading.classList.add("hide");
+      return;
+    }
+
+    // Chrome / Androidなど
+    if(window.Hls && Hls.isSupported()){
+      viewerHls=new Hls({
+        enableWorker:true,
+        lowLatencyMode:true,
+        backBufferLength:30,
+        maxBufferLength:30
+      });
+      viewerHls.loadSource(proxied);
+      viewerHls.attachMedia(video);
+      viewerHls.on(Hls.Events.MANIFEST_PARSED,async()=>{
+        if(myToken!==viewerToken)return;
+        loading.classList.add("hide");
+        try{await video.play()}catch(e){}
+      });
+      viewerHls.on(Hls.Events.ERROR,(event,data)=>{
+        if(myToken!==viewerToken)return;
+        if(data && data.fatal){
+          showViewerError("配信を再生できませんでした","m3u8の取得または再生に失敗しました。SHOWROOMで直接視聴できます。");
+        }
+      });
+      return;
+    }
+
+    showViewerError("このブラウザではHLS再生に対応していません","SHOWROOMで直接視聴してください。");
+  }catch(e){
+    if(myToken!==viewerToken)return;
+    console.error("SHOWROOM HLS error",e);
+    showViewerError("配信を読み込めませんでした", (e && e.message ? e.message : "m3u8を取得できませんでした。")+"\nSHOWROOMで直接視聴できます。");
+  }
+}
+
+function closeViewer(){
+  viewerToken++;
+  const modal=document.getElementById("viewerModal");
+  const video=document.getElementById("viewerVideo");
+  clearTimeout(window.__viewerFallbackTimer);
+  if(viewerHls){try{viewerHls.destroy()}catch(e){}viewerHls=null}
+  video.pause();
+  video.removeAttribute("src");
+  video.load();
+  document.getElementById("viewerFallback").classList.remove("show");
+  document.getElementById("viewerLoading").classList.remove("hide");
+  modal.classList.remove("show");
+  document.body.style.overflow="";
+}
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeViewer()});
+document.getElementById("viewerModal").addEventListener("click",e=>{
+  if(e.target.id==="viewerModal") closeViewer();
+});
+</script>
+</body>
+</html>
